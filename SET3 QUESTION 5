@@ -1,40 +1,28 @@
 #include <iostream>
+#include <stack>
 #include <string>
 using namespace std;
 
-bool isValid(const string& s) {
-    int round = 0, curly = 0, square = 0;
-
-    for (char ch : s) {
-        if (ch == '(') {
-            round++;
-        } else if (ch == ')') {
-            round--;
-            if (round < 0) return false; // Mismatched ')'
-        } else if (ch == '{') {
-            curly++;
-        } else if (ch == '}') {
-            curly--;
-            if (curly < 0) return false; // Mismatched '}'
-        } else if (ch == '[') {
-            square++;
-        } else if (ch == ']') {
-            square--;
-            if (square < 0) return false; // Mismatched ']'
+bool isValid(string s) {
+    stack<char> st;
+    for (char c : s) {
+        if (c == '(' || c == '{' || c == '[') {
+            st.push(c);
+        } else {
+            if (st.empty()) return false;
+            if ((c == ')' && st.top() != '(') ||
+                (c == '}' && st.top() != '{') ||
+                (c == ']' && st.top() != '[')) {
+                return false;
+            }
+            st.pop();
         }
     }
-
-    // All counters should be 0 for a valid string
-    return (round == 0 && curly == 0 && square == 0);
+    return st.empty();
 }
 
 int main() {
-    string s = "{[()]}";
-    if (isValid(s)) {
-        cout << "True";
-    } else {
-        cout << "False";
-    }
-
+    string s = "([])";
+    cout << (isValid(s) ? "true" : "false");
     return 0;
 }
