@@ -1,0 +1,67 @@
+#include <iostream>
+#include <vector>
+#include <cmath>
+using namespace std;
+
+bool isPerfectSquare(int num) {
+    int root = sqrt(num);
+    return root * root == num;
+}
+
+vector<int> factors(int i) {
+    vector<int> ar;
+    for (int j = 2; j <= i / 2; j++) {
+        if (i % j == 0) {
+            ar.push_back(j);//1, 2, 3, 4, 6, 8, 9, 12, 18, 24, 36 
+        }
+    }
+    return ar;
+}
+
+vector<int> squareFree(int i) {
+    vector<int> factorsList = factors(i);//1, 2, 3, 4, 6, 8, 9, 12, 18, 24, 3
+    vector<int> sf;//2 6
+    vector<int> perfectSquares;//4 9 36
+
+    for (int j = 0; j < factorsList.size(); j++) {
+        if (isPerfectSquare(factorsList[j])) {
+            perfectSquares.push_back(factorsList[j]);
+        
+    }
+
+    for (int j = 0; j < factorsList.size(); j++) {
+        bool divisibleByPerfectSquare = false;
+        for (int k = 0; k < perfectSquares.size(); k++) {
+            if (factorsList[j] % perfectSquares[k] == 0) {
+                divisibleByPerfectSquare = true;
+                break;
+            }
+        }
+        if (!divisibleByPerfectSquare) {
+            sf.push_back(factorsList[j]);
+        }
+    }
+
+    return sf;
+}
+}
+
+int main() {
+    int i;
+    cout << "Enter a number which is not divisible by a prime number greater than 19: ";
+    cin >> i;//72
+
+    vector<int> result = squareFree(i);//
+
+    if (!result.empty()) {
+        cout << "Square-free factors: ";
+        for (int k = 0; k < result.size(); k++) {
+            cout << result[k] << " ";
+        }
+        cout << endl;
+    } else {
+        cout << "No square-free factors found." << endl;
+    }
+
+    return 0;
+}
